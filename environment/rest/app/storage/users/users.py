@@ -1,4 +1,4 @@
-user_data = {"1": {"lastname": "Hans", "firstname": "Gruber"}}
+user_data = {"1": {"id": "1", "lastname": "Hans", "firstname": "Gruber"}}
 
 
 def users():

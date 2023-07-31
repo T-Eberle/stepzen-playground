@@ -1,0 +1,10 @@
+type User {
+  firstname: String
+  id: Int
+  lastname: String
+}
+
+type Query {
+  UserQuery: User
+    @rest(endpoint: "http://host.docker.internal:8080/api/users/1")
+}

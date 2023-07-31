@@ -1,21 +1,16 @@
-import json
+import uvicorn
+from fastapi import FastAPI
 
-from fastapi import FastAPI, HTTPException
-
-from app.services.users.users import UserNotFound, get_user
+from app.controllers.users import router as users_router
 
 app = FastAPI()
 
-
-@app.get("/api/health")
-async def health():
-    return {"message": "up"}
+app.include_router(users_router, prefix="/api")
 
 
-@app.get("/api/users/{user_id}")
-async def users(user_id: str):
-    try:
-        user = get_user(user_id)
-        return {"user": json.dumps(user)}
-    except UserNotFound:
-        raise HTTPException(status_code=404, detail="User not found")
+def main():
+    uvicorn.run("app.main:app", host="0.0.0.0", port=8000, reload=True)
+
+
+if __name__ == "__main__":
+    main()

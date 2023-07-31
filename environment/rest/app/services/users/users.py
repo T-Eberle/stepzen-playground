@@ -6,7 +6,6 @@ class UserNotFound(Exception):
 
 
 def get_user(user_id: str):
-    print(user_data)
     if user_id not in user_data:
         raise UserNotFound()
     else:
