@@ -41,6 +41,10 @@ services:
     build: ./rest
     ports:
       - 8080:8080
+  graphql:
+    build: ./graphql
+    ports:
+      - 9000:9000
 # Names our volume
 volumes:
   my-db:
