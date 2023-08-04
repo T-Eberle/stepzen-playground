@@ -1,0 +1,21 @@
+type Query {
+  "Get resource by id."
+  getById(id: Int): Resource
+    @graphql(endpoint: "http://host.docker.internal:19000/graphql")
+  "Returns all resources"
+  resources: [Resource]
+    @graphql(endpoint: "http://host.docker.internal:19000/graphql")
+}
+
+type Resource {
+  cpu_util: Float
+  created: DateTime
+  free_space_gb: Float
+  id: Int
+  mem_util: Float
+  name: String
+  provider: String
+  total_space_gb: Int
+  type: String
+  updated: DateTime
+}

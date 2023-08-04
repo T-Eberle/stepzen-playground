@@ -4,8 +4,8 @@ from pydantic import BaseModel, Field
 
 
 class Project(BaseModel):
-    id: str
-    resource_ids: List[str]
+    id: int
+    resource_ids: List[int]
     name: str
     description: str
     agile_method: str

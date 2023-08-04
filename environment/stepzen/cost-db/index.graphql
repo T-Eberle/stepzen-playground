@@ -1,0 +1,84 @@
+type cost {
+  type: String!
+  resource_id: Int!
+  name: String!
+  is_paid: Boolean
+  description: String
+  amount: String!
+}
+
+"""
+The following queries are just a set of examples of how to access your schema.
+Feel free to modify them or aggregate more.
+"""
+type Query {
+  " Queries for type 'cost' "
+  costByIs_paid(is_paid: Boolean!): [cost]
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      table: "cost"
+      configuration: "postgresql_config"
+    )
+  costByIs_paidAndName(is_paid: Boolean!, name: String!): [cost]
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      table: "cost"
+      configuration: "postgresql_config"
+    )
+  costList: [cost]
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      table: "cost"
+      configuration: "postgresql_config"
+    )
+  costPaginatedList(first: Int, after: Int): [cost]
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      query: """
+      SELECT "amount", "description", "is_paid", "name", "resource_id", "type" FROM "cost" LIMIT $1 OFFSET $2
+      """
+      configuration: "postgresql_config"
+    )
+}
+
+"""
+The following mutations are just a set of examples of how to access your schema.
+Feel free to modify them or aggregate more.
+"""
+type Mutation {
+  " Mutations for type 'cost' "
+  deleteCost(
+    name: String!
+    description: String!
+    amount: String!
+    is_paid: Boolean!
+    type: String!
+    resource_id: Int!
+  ): cost
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      table: "cost"
+      dml: DELETE
+      configuration: "postgresql_config"
+    )
+  insertCost(
+    name: String!
+    description: String
+    amount: String!
+    is_paid: Boolean
+    type: String!
+    resource_id: Int!
+  ): cost
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      table: "cost"
+      dml: INSERT
+      configuration: "postgresql_config"
+    )
+}

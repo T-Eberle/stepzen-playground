@@ -8,7 +8,7 @@ projects_data = [
         description="has an app that hypersecurely turbo-userfriendly generates super value",
         agile_method= "scrum",
         team_members_amount=42,
-        is_complete=False
+        is_completed=False
     ),
 Project(
         id=2,
@@ -17,7 +17,7 @@ Project(
         description="use llama 2 to query given documents based on chat input",
         agile_method= "kanban",
         team_members_amount=9,
-        is_complete=True
+        is_completed=True
     ),
     Project(
         id=3,
@@ -26,7 +26,7 @@ Project(
         description="storage provider for encrypted data at rest, in flight and ibm unable to decrypt",
         agile_method= "kanban",
         team_members_amount=4,
-        is_complete=True
+        is_completed=True
     ),
 ]
 
