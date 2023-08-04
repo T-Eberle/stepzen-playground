@@ -28,19 +28,25 @@ services:
         max-size: 10m
         max-file: "3"
     ports:
-      - '5432:5432'
+      - '15432:5432'
     volumes: 
       # copy the sql script to create tables
       - ./cost-db/create_tables.sql:/docker-entrypoint-initdb.d/create_tables.sql
   agile-api:
     build: ./agile-api
     ports:
-      - 8080:8080
-  graphql:
-    build: ./graphql
+      - 18080:8080
+    networks: 
+      - stepzen-network
+  resources-api:
+    build: ./resources-api
     ports:
-      - 9000:9000
+      - 19000:9000
 # Names our volume
 volumes:
   sust-db:
   cost-db:
+networks:
+  stepzen-network:
+    external:
+      true

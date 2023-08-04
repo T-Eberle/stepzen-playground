@@ -7,4 +7,9 @@ class ProjectNotFound(Exception):
 
 
 def list_projects() -> ProjectsResponse:
-    return ProjectsResponse(projects=[Project(**x) for x in projects()])
+    return ProjectsResponse(projects=projects())
+
+
+def get_project(project_id: int) -> Project:
+    ps = [p for p in projects() if p.id == project_id]
+    return ps[0]

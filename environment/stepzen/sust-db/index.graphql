@@ -1,0 +1,80 @@
+type sustainability {
+  resource_id: Int!
+  power_usage_kwh: Int!
+  particulate_matter_amount: Int!
+  name: String!
+  id: Int!
+  description: String
+  carbon_dioxide_t: Float!
+}
+
+"""
+The following queries are just a set of examples of how to access your schema.
+Feel free to modify them or aggregate more.
+"""
+type Query {
+  " Queries for type 'sustainability' "
+  sustainabilityById(id: Int!): [sustainability]
+    @dbquery(
+      type: "mysql"
+      table: "sustainability"
+      configuration: "mysql_config"
+    )
+  sustainabilityByIdAndName(id: Int!, name: String!): [sustainability]
+    @dbquery(
+      type: "mysql"
+      table: "sustainability"
+      configuration: "mysql_config"
+    )
+  sustainabilityList: [sustainability]
+    @dbquery(
+      type: "mysql"
+      table: "sustainability"
+      configuration: "mysql_config"
+    )
+  sustainabilityPaginatedList(first: Int!, after: Int!): [sustainability]
+    @dbquery(
+      type: "mysql"
+      query: """
+      SELECT `carbon_dioxide_t`, `description`, `id`, `name`, `particulate_matter_amount`, `power_usage_kwh`, `resource_id` FROM `sustainability` LIMIT ? OFFSET ?
+      """
+      configuration: "mysql_config"
+    )
+}
+
+"""
+The following mutations are just a set of examples of how to access your schema.
+Feel free to modify them or aggregate more.
+"""
+type Mutation {
+  " Mutations for type 'sustainability' "
+  deleteSustainability(
+    name: String!
+    description: String!
+    carbon_dioxide_t: Float!
+    power_usage_kwh: Int!
+    id: Int!
+    particulate_matter_amount: Int!
+    resource_id: Int!
+  ): sustainability
+    @dbquery(
+      type: "mysql"
+      table: "sustainability"
+      dml: DELETE
+      configuration: "mysql_config"
+    )
+  insertSustainability(
+    name: String!
+    description: String!
+    carbon_dioxide_t: Float!
+    power_usage_kwh: Int!
+    particulate_matter_amount: Int!
+    resource_id: Int!
+  ): sustainability
+    @dbquery(
+      type: "mysql"
+      table: "sustainability"
+      dml: INSERT
+      configuration: "mysql_config"
+    )
+}

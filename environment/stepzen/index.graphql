@@ -1,3 +1,11 @@
-schema @sdl(files: ["userQuery/index.graphql"]) {
+schema
+  @sdl(
+    files: [
+      "sust-db/index.graphql"
+      "cost-db/index.graphql"
+      "agile-api/index.graphql"
+      "resources-api/index.graphql"
+    ]
+  ) {
   query: Query
 }

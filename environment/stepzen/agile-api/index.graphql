@@ -1,0 +1,17 @@
+type Projects {
+  projects: [Project]
+}
+type Project {
+  agile_method: String
+  description: String
+  id: Int
+  is_completed: Boolean
+  name: String
+  resource_ids: [Int]
+  team_members_amount: Int
+}
+
+type Query {
+  projectsList: Projects
+    @rest(endpoint: "http://host.docker.internal:18080/api/projects")
+}
