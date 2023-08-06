@@ -1,7 +1,7 @@
 version: '3.7'
 services:
-  mysql:
-    image: mysql:8.0.34-debian
+  sust-db:
+    image: mariadb:11.0.2-jammy
     restart: always
     environment:
       MYSQL_DATABASE: 'db'
@@ -14,13 +14,10 @@ services:
     ports:
       # <Port exposed> : <MySQL Port running inside container>
       - '3306:3306'
-    expose:
-      # Opens port 3306 on the container
-      - '3306'
-      # Where our data will be persisted
     volumes:
-      - my-db:/var/lib/mysql
-  postgres:
+      - sust-db:/var/lib/mysql
+      - ./sust-db/create-tables.sql:/docker-entrypoint-initdb.d/create-tables.sql
+  cost-db:
     image: postgres:15.3-alpine3.18
     restart: always
     environment:
@@ -31,21 +28,25 @@ services:
         max-size: 10m
         max-file: "3"
     ports:
-      - '5438:5432'
+      - '15432:5432'
     volumes: 
       # copy the sql script to create tables
-      - ./postgres/create_tables.sql:/docker-entrypoint-initdb.d/create_tables.sql
-      - ./mysql/schema.sql:/docker-entrypoint-initdb.d/create-tables.sql
-      - ./mysql/data.sql:/docker-entrypoint-initdb.d/create-data.sql
-  rest:
-    build: ./rest
+      - ./cost-db/create_tables.sql:/docker-entrypoint-initdb.d/create_tables.sql
+  agile-api:
+    build: ./agile-api
     ports:
-      - 8080:8080
-  graphql:
-    build: ./graphql
+      - 18080:8080
+    networks: 
+      - stepzen-network
+  resources-api:
+    build: ./resources-api
     ports:
-      - 9000:9000
+      - 19000:9000
 # Names our volume
 volumes:
-  my-db:
-  psql-db:
+  sust-db:
+  cost-db:
+networks:
+  stepzen-network:
+    external:
+      true

@@ -1,0 +1,7 @@
+configurationset:
+  - configuration:
+      name: postgresql_config
+      uri: postgresql://host.docker.internal:15432/postgres?user=postgres&password=postgres
+  - configuration:
+      name: mysql_config
+      dsn: user:password@tcp(host.docker.internal)/db
