@@ -1,7 +1,4 @@
-type Projects {
-  projects: [Project]
-}
-type Project {
+type project {
   agile_method: String
   description: String
   id: Int
@@ -12,6 +9,8 @@ type Project {
 }
 
 type Query {
-  projectsList: Projects
+  projectsList: project
     @rest(endpoint: "http://host.docker.internal:18080/api/projects")
+  projectById(id: String!): project
+    @rest(endpoint: "http://host.docker.internal:18080/api/projects/$id")
 }

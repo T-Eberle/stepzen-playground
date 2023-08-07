@@ -7,6 +7,14 @@ type cost {
   amount: String!
 }
 
+extend type cost {
+  resource: Resource
+    @materializer(
+      query: "resourceById"
+      arguments: [{ name: "id", field: "resource_id" }]
+    )
+}
+
 """
 The following queries are just a set of examples of how to access your schema.
 Feel free to modify them or aggregate more.

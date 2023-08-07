@@ -1,6 +1,11 @@
 package main
 
-import "github.com/graphql-go/graphql"
+import (
+	"fmt"
+	"github.com/graphql-go/graphql"
+	"golang.org/x/exp/slices"
+	"reflect"
+)
 
 var resourceType = graphql.NewObject(graphql.ObjectConfig{
 	Name: "Resource",
@@ -45,7 +50,7 @@ var _ = importJSONDataFromFile("./resources.json", &ResourceList)
 var rootQuery = graphql.NewObject(graphql.ObjectConfig{
 	Name: "ResourceQueries",
 	Fields: graphql.Fields{
-		"getById": &graphql.Field{
+		"resourceById": &graphql.Field{
 			Type:        resourceType,
 			Description: "Get resource by id.",
 			Args: graphql.FieldConfigArgument{
@@ -66,7 +71,40 @@ var rootQuery = graphql.NewObject(graphql.ObjectConfig{
 				return Resource{}, nil
 			},
 		},
-		"resources": &graphql.Field{
+		"resourceFilterByIds": &graphql.Field{
+			Type:        graphql.NewList(resourceType),
+			Description: "List resources matching IDs.",
+			Args: graphql.FieldConfigArgument{
+				"ids": &graphql.ArgumentConfig{
+					Type: graphql.NewList(graphql.Int),
+				},
+			},
+			Resolve: func(params graphql.ResolveParams) (interface{}, error) {
+				idQuery, isOk := params.Args["ids"].([]int)
+				for i, v := range params.Args["ids"].([]interface{}) {
+					fmt.Println(reflect.TypeOf(v))
+					fmt.Printf("%d = %d\n", i, v.(int))
+				}
+				fmt.Println(params.Args["ids"])
+				fmt.Println(idQuery)
+				fmt.Println(isOk)
+				fmt.Println(reflect.TypeOf(idQuery))
+				fmt.Println(reflect.TypeOf(params.Args["ids"]))
+
+				if isOk {
+					var resources []Resource
+					for _, resource := range ResourceList {
+
+						if slices.Contains(idQuery, resource.ID) {
+							resources = append(resources, resource)
+						}
+					}
+					return resources, nil
+				}
+				return []Resource{}, nil
+			},
+		},
+		"listResources": &graphql.Field{
 			Type:        graphql.NewList(resourceType),
 			Description: "Returns all resources",
 			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
