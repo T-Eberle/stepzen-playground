@@ -80,16 +80,11 @@ var rootQuery = graphql.NewObject(graphql.ObjectConfig{
 				},
 			},
 			Resolve: func(params graphql.ResolveParams) (interface{}, error) {
-				idQuery, isOk := params.Args["ids"].([]int)
-				for i, v := range params.Args["ids"].([]interface{}) {
-					fmt.Println(reflect.TypeOf(v))
-					fmt.Printf("%d = %d\n", i, v.(int))
+				idQueryInterface, isOk := params.Args["ids"].([]interface{})
+				idQuery := make([]int, 0, len(idQueryInterface))
+				for _, v := range idQueryInterface {
+					idQuery = append(idQuery, v.(int))
 				}
-				fmt.Println(params.Args["ids"])
-				fmt.Println(idQuery)
-				fmt.Println(isOk)
-				fmt.Println(reflect.TypeOf(idQuery))
-				fmt.Println(reflect.TypeOf(params.Args["ids"]))
 
 				if isOk {
 					var resources []Resource
