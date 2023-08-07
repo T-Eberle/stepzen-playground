@@ -21,7 +21,7 @@ async def projects():
 
 
 @router.get(
-    "/project/{project_id}",
+    "/projects/{project_id}",
     responses={
         200: {
             "model": Project,
