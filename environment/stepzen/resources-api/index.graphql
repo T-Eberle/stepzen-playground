@@ -13,7 +13,7 @@ type Resource {
 
 type Query {
   "Returns all resources"
-  listResources: [Resource]
+  resourcesList: [Resource]
     @graphql(endpoint: "http://host.docker.internal:19000/graphql")
   "Get resource by id."
   resourceById(id: Int): Resource

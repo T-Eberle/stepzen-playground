@@ -8,11 +8,26 @@ type project {
   team_members_amount: Int
 }
 
+extend type project {
+  resources: [Resource]
+  @materializer(
+      query: "resourceFilterByIds"
+      arguments: [{ name: "ids", field: "resource_ids" }]
+    )
+}
+
 type Query {
   projectsList: project
-    @rest(endpoint: "http://host.docker.internal:18080/api/projects")
+    @rest(endpoint: "http://host.docker.internal:18080/api/projects/",
+    transforms: [
+      {
+        pathpattern: [],
+        editor:"""
+          jq: .projects[]
+        """
+      }
+    ]
+  )
   projectById(id: String!): project
     @rest(endpoint: "http://host.docker.internal:18080/api/projects/$id")
-  projectsByIds(ids: [String]!): [project]
-    @rest(endpoint: "http://host.docker.internal:18080/api/projects/$ids")
 }
