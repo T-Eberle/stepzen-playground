@@ -1,4 +1,4 @@
-# StepZen Bootcamp: Create and Deploy
+# StepZen Bootcamp: Create and Prepare
 
 ## Initialise a StepZen project
 
@@ -28,23 +28,49 @@ including the defined name of your api.
 └── index.graphql
 ```
 
-## Create a graphql scheme file
+The `stepzen.config.json` keeps all information of the api project 
+wide configuration concerning StepZen. 
 
-### Import via Stepzen cli
+In the root directory, StepZen expects an `index.graphql` file. 
+This can either define all schemes and queries or it can reference other files
+in this project directory. It is recommended to split the logic of the StepZen
+API into separate graphql files and combine them with the root `index.grapqhl` 
+file.
 
-### Create graphql file manually
+In this example, the `index.graphql` could look like this:
 
-## Deploy a graphql scheme file
+```grapqhl
 
-Let's assume the following project structure:
-
-```bash
-
+schema
+  @sdl(
+    files: [
+      "nested_schema_file/schema_a.graphql"
+      "another_nested_schema_file/schema_b.graphql"
+    ]
+  ) {
+  query: Query
+}
 ```
 
-## Exercise
+In case you want to add other graphql files, you simply add them to the root 
+`index.graphql` file.
+
+## Exercises
+
+### Task 1
+
+Create a new StepZen project with `stepzen init`. Call your api `api/bootcamp`.
 
 <details>
 <summary><b>Results</b></summary>
+To generate a new StepZen project with the `stepzen init` command, run the 
+following command in your target directory for this project: 
 
+```bash
+stepzen init
+```
+
+For more information, click [here](https://stepzen.com/docs/cli/cli-commands#stepzen-init).
 </details>
+
+
