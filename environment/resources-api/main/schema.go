@@ -1,10 +1,8 @@
 package main
 
 import (
-	"fmt"
 	"github.com/graphql-go/graphql"
 	"golang.org/x/exp/slices"
-	"reflect"
 )
 
 var resourceType = graphql.NewObject(graphql.ObjectConfig{

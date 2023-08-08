@@ -13,4 +13,6 @@ type Query {
     @rest(endpoint: "http://host.docker.internal:18080/api/projects")
   projectById(id: String!): project
     @rest(endpoint: "http://host.docker.internal:18080/api/projects/$id")
+  projectsByIds(ids: [String]!): [project]
+    @rest(endpoint: "http://host.docker.internal:18080/api/projects/$ids")
 }
