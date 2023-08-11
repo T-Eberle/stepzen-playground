@@ -26,21 +26,21 @@ type Query {
       type: "postgresql"
       schema: "public"
       table: "cost"
-      configuration: "postgresql_config"
+      configuration: "cost-db-config"
     )
   costByIs_paidAndName(is_paid: Boolean!, name: String!): [cost]
     @dbquery(
       type: "postgresql"
       schema: "public"
       table: "cost"
-      configuration: "postgresql_config"
+      configuration: "cost-db-config"
     )
   costList: [cost]
     @dbquery(
       type: "postgresql"
       schema: "public"
       table: "cost"
-      configuration: "postgresql_config"
+      configuration: "cost-db-config"
     )
   costPaginatedList(first: Int, after: Int): [cost]
     @dbquery(
@@ -49,7 +49,7 @@ type Query {
       query: """
       SELECT "amount", "description", "is_paid", "name", "resource_id", "type" FROM "cost" LIMIT $1 OFFSET $2
       """
-      configuration: "postgresql_config"
+      configuration: "cost-db-config"
     )
 }
 
@@ -72,7 +72,7 @@ type Mutation {
       schema: "public"
       table: "cost"
       dml: DELETE
-      configuration: "postgresql_config"
+      configuration: "cost-db-config"
     )
   insertCost(
     name: String!
@@ -87,6 +87,6 @@ type Mutation {
       schema: "public"
       table: "cost"
       dml: INSERT
-      configuration: "postgresql_config"
+      configuration: "cost-db-config"
     )
 }

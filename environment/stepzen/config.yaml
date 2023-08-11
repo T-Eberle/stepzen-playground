@@ -1,7 +1,15 @@
 configurationset:
   - configuration:
-      name: postgresql_config
-      uri: postgresql://host.docker.internal:15432/postgres?user=postgres&password=postgres
+      name: cost-db-config
+      uri: STEPZEN_SUST_DB_DSN
   - configuration:
-      name: mysql_config
-      dsn: user:password@tcp(host.docker.internal)/db
+      name: sust-db-config
+      dsn: STEPZEN_COST_DB_DSN
+  - configuration:
+      name: agile-api-config
+      url: STEPZEN_AGILE_API_URL
+      stepzen.queryextensionguard: "true"
+  - configuration:
+      name: resources-api-config
+      url: STEPZEN_RESOURCES_API_URL
+      stepzen.queryextensionguard: "true"

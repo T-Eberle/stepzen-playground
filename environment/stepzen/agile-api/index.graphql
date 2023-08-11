@@ -10,7 +10,7 @@ type project {
 
 extend type project {
   resources: [Resource]
-  @materializer(
+    @materializer(
       query: "resourceFilterByIds"
       arguments: [{ name: "ids", field: "resource_ids" }]
     )
@@ -18,16 +18,21 @@ extend type project {
 
 type Query {
   projectsList: project
-    @rest(endpoint: "http://host.docker.internal:18080/api/projects/",
-    transforms: [
-      {
-        pathpattern: [],
-        editor:"""
+    @rest(
+      endpoint: "http://$url/api/projects"
+      configuration: "agile-api-config"
+      transforms: [
+        {
+          pathpattern: []
+          editor: """
           jq: .projects[]
-        """
-      }
-    ]
-  )
+          """
+        }
+      ]
+    )
   projectById(id: String!): project
-    @rest(endpoint: "http://host.docker.internal:18080/api/projects/$id")
+    @rest(
+      endpoint: "http://$url/api/projects/$id"
+      configuration: "agile-api-config"
+    )
 }
