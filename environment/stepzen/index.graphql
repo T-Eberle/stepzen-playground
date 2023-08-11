@@ -5,7 +5,6 @@ schema
       "cost-db/index.graphql"
       "agile-api/index.graphql"
       "resources-api/index.graphql"
-      "graphql/index.graphql"
     ]
   ) {
   query: Query
