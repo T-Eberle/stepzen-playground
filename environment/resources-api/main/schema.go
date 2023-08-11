@@ -97,7 +97,7 @@ var rootQuery = graphql.NewObject(graphql.ObjectConfig{
 				return []Resource{}, nil
 			},
 		},
-		"listResources": &graphql.Field{
+		"resourcesList": &graphql.Field{
 			Type:        graphql.NewList(resourceType),
 			Description: "Returns all resources",
 			Resolve: func(p graphql.ResolveParams) (interface{}, error) {

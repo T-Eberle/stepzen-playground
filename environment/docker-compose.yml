@@ -21,8 +21,9 @@ services:
     image: postgres:15.3-alpine3.18
     restart: always
     environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=cost
     logging:
       options:
         max-size: 10m
