@@ -1,10 +1,10 @@
 configurationset:
   - configuration:
       name: cost-db-config
-      uri: STEPZEN_SUST_DB_DSN
+      uri: STEPZEN_COST_DB_DSN
   - configuration:
       name: sust-db-config
-      dsn: STEPZEN_COST_DB_DSN
+      dsn: STEPZEN_SUST_DB_DSN
   - configuration:
       name: agile-api-config
       url: STEPZEN_AGILE_API_URL
