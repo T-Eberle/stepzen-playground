@@ -8,7 +8,7 @@
 
 
 
-# Prepare the environment
+## Prepare the environment
 
 For the test/bootcamp environment, an OCI conform container-tool is required. 
 Furthermore, you need to be able to execute `docker-compose` files.
@@ -18,21 +18,29 @@ There are several options to run a `docker-compose`-file:
 - Podman Compose: [More](https://github.com/containers/podman-compose)
 
 If these requirements are fulfilled, you can start the environment 
-depending on your OS and OCI-tool.
+depending on your OCI-tool.
 
-For Linux and macOS:
+For Docker:
 
-- Docker: `./start_environment_docker.sh`
-- Podman: `./start_environment_podman.sh` 
+```bash
+docker-compose up --force-recreate --build -d 
+```
 
-For Windows: 
+For Podman: 
 
-- Docker: `./start_environment_docker.bat` 
-- Podman: `./start_environment_podman.bat` 
+```bash
+podman-compose up --force-recreate --build -d 
+```
+
+**Important Notice:**
+Depending on what you use, you have to use a specific hostname in order 
+to connect to the local services inside stepzen:
+- Docker: `host.docker.internal`
+- Podman: `host.containers.internal`
+- Alternatively: Your machine's IP address 
 
 
-
-# Contact us
+## Contact us
 
 | Name| Role | Email |
 | ---- |----| ----  |
