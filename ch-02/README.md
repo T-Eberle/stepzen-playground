@@ -64,7 +64,7 @@ Create a new StepZen project with `stepzen init`. Call your api `api/bootcamp`.
 <details>
 <summary><b>Results</b></summary>
 To generate a new StepZen project with the `stepzen init` command, run the 
-following command in your target directory for this project: 
+following command in your desired target directory for this project: 
 
 ```bash
 stepzen init

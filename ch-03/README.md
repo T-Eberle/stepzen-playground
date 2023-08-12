@@ -35,7 +35,9 @@ ou start combining data sources in one dataset, you will have to do manual chang
 To deploy a StepZen API via the CLI, consider the following steps:
 
 1. You need to be logged in on your local or cloud-based StepZen instance and 
-account. This can be done via the command `stepzen login`. See also [here](https://stepzen.com/docs/cli/cli-commands#stepzen-login)
+account. This can be done via the command `stepzen login`. See also 
+[here](https://stepzen.com/docs/cli/cli-commands#stepzen-login). 
+For connecting to a local docker environment, check this link [here](https://stepzen.com/docs/deployment/local-docker)
 2.  When you are logged in successfully, you can deploy your graphql project 
 to your public StepZen account with the command `stepzen deploy`. See also [here](https://stepzen.com/docs/cli/cli-commands#stepzen-deploy).
 
@@ -52,16 +54,18 @@ in the root path of your project directory.
 ### Task 1
 
 Import the `resources-api` with the `stepzen import` command. All your types 
-and queries should be prefixed with `resources`.
+and queries should be inside the `resources` folder.
 
-**URL:** *http://localhost:19000/graphql*
+**URL for Podman:** *http://host.containers.internal:19000/graphql*
+
+**URL for Docker:** *http://host.docker.internal:19000/graphql*
 
 <details>
 <summary><b>Results</b></summary>
-To import the `resources-api`, simply execute the following command:
+To import the `resources-api`, simply execute the following command (for podman):
 
 ```bash
-stepzen import graphql http://localhost:19000/graphql --prefix=resources
+stepzen import graphql http://host.containers.internal:19000/graphql --name=resources
 ```
 
 </details>
@@ -72,7 +76,7 @@ Import the MySQL(MariaDB) database `sust-db` via `stepzen import`.
 
 Information about the database:
 
-**Host:** *localhost:3306*
+**Host:** *host.containers.internal:3306* / *host.docker.internal:3306*
 
 **Username:** *user*
 
@@ -85,7 +89,7 @@ Information about the database:
 To import the `sust-db`, execute the following command:
 
 ```bash
-stepzen import mysql mysql://[<USER>:<PASSWORD>@]<HOST>[:<PORT>][/<DATABASE>]
+stepzen import mysql mysql://user.password@host.containers.internal:3306/db --name=sust-db
 ```
 
 </details>
@@ -94,7 +98,7 @@ stepzen import mysql mysql://[<USER>:<PASSWORD>@]<HOST>[:<PORT>][/<DATABASE>]
 
 Import the PostgreSQL database `cost-db` via `stepzen import`
 
-**Host:** *localhost:15432*
+**Host:** *host.containers.internal:15432* / *host.docker.internal:15432*
 
 **Username:** *user*
 
@@ -107,7 +111,7 @@ Import the PostgreSQL database `cost-db` via `stepzen import`
 To import the `cost-db` via `stepzen import`, execute the following command:
 
 ```bash
-stepzen import postgresql postgresql://localhost:15432/db?user=user&password=password
+stepzen import postgresql postgresql://host.containers.internal:15432/db?user=user&password=password
 ```
 
 </details>
