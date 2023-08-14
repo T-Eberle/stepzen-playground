@@ -20,7 +20,7 @@ With the option `query-name` you set the name of the query, which will be
 created behind this REST request. The option `query-type` defines the graphql 
 type, which is supposed to be returned by the REST request as a response.
 
-For more details, click [here](https://stepzen.com/docs/quick-start/with-rest-import).
+For more details, click [here](https://www.ibm.com/docs/en/stepzen?topic=quickstart-transform-rest-graphql).
 
 ### Create graphql file manually
 
@@ -36,10 +36,10 @@ To deploy a StepZen API via the CLI, consider the following steps:
 
 1. You need to be logged in on your local or cloud-based StepZen instance and 
 account. This can be done via the command `stepzen login`. See also 
-[here](https://stepzen.com/docs/cli/cli-commands#stepzen-login). 
-For connecting to a local docker environment, check this link [here](https://stepzen.com/docs/deployment/local-docker)
+[here](https://www.ibm.com/docs/en/stepzen?topic=reference-cli-commands#stepzen-login). 
+For connecting to a local docker environment, check this link [here](https://www.ibm.com/docs/en/stepzen?topic=apis-local-development-in-docker)
 2.  When you are logged in successfully, you can deploy your graphql project 
-to your public StepZen account with the command `stepzen deploy`. See also [here](https://stepzen.com/docs/cli/cli-commands#stepzen-deploy).
+to your public StepZen account with the command `stepzen deploy`. See also [here](https://www.ibm.com/docs/en/stepzen?topic=reference-cli-commands#stepzen-deploy).
 
 Important Note: When you deploy your API (step 2), you need to be in the 
 project directory with the current session of your terminal.

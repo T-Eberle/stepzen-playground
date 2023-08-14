@@ -8,7 +8,8 @@ This means that you can integrate data sources to other data sources by just
 defining a graphql schema. This is one of the top features of StepZen 
 and gives developers the ability to easily extend their graphql types.
 
-A full example with `Customers` and `Orders` can be found [here](https://stepzen.com/docs/connecting-backends/stitching). 
+A full example with `Customers` and `Orders` can be found 
+[here](https://www.ibm.com/docs/en/stepzen?topic=schemas-link-types-materializer#combine-subgraphs-using-the-materializer-directive). 
 More information about extending types can be found [in the next chapter](../ch-05/README.md).
 
 ## Transform
@@ -20,7 +21,7 @@ for different datasources.
 As soon as you will start to use interfaces,
 you will probably use several transforms for your APIs in order to set the 
 right attribute names.
-There are different types of transforms, which you can find [here](https://stepzen.com/docs/custom-graphql-directives/directives#transforms).
+There are different types of transforms, which you can find [here](https://www.ibm.com/docs/en/stepzen?topic=reference-directives#transforms).
 
 ## Exercises
 
@@ -93,10 +94,105 @@ extend type project {
 
 ### Task 4
 
-For the Projects/Agile graphql type, transform the nested `projects`-array to an
-unnested array.
+Import the agile-api manually by creating a graphql file.
+
+Type: 
+
+```graphql
+type project {
+  agile_method: String
+  description: String
+  id: Int
+  is_completed: Boolean
+  name: String
+  resource_ids: [Int]
+  team_members_amount: Int
+}
+```
+
+Queries:
+- `http://host.containers.internal:18080/api/projects/$id` -> Returns a single project by id
+- `http://host.containers.internal:18080/api/projects/` -> Returns all projects as an array
+
+Extend:
+Resource type by using the resource_ids (plural!)
+
 
 <details>
 <summary><b>Results</b></summary>
+
+A sample solution could look like this:
+
+```graphql
+type project {
+  agile_method: String
+  description: String
+  id: Int
+  is_completed: Boolean
+  name: String
+  resource_ids: [Int]
+  team_members_amount: Int
+}
+
+extend type project {
+  resources: [Resource]
+    @materializer(
+      query: "resourceFilterByIds"
+      arguments: [{ name: "ids", field: "resource_ids" }]
+    )
+}
+
+type Query {
+  projectsList: [project]
+    @rest(
+      endpoint: "http://$url/api/projects/"
+      configuration: "agile-api-config"
+      transforms: [
+        {
+          pathpattern: []
+          editor: """
+          jq: .projects[]
+          """
+        }
+      ]
+    )
+  projectById(id: String!): project
+    @rest(
+      endpoint: "http://$url/api/projects/$id"
+      configuration: "agile-api-config"
+    )
+}
+```
+
+</details>
+
+### Task 5
+
+For the Projects/Agile graphql type and the `projectsList`-Query, flatten the 
+array by using `jq` (Flatten => Turn the `projects`- array inside 
+the response to the root array.)
+
+<details>
+<summary><b>Results</b></summary>
+
+For this, you need to 
+
+```graphql
+projectsList: [project]
+    @rest(
+      endpoint: "http://$url/api/projects/"
+      configuration: "agile-api-config"
+      transforms: [
+        {
+          pathpattern: []
+          editor: """
+          jq: .projects[]
+          """
+        }
+      ]
+    )
+
+```
+
 </details>
 

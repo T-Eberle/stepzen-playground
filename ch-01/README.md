@@ -9,8 +9,13 @@ To install the local dev environment, you need to fulfill the following requirem
 - Docker or a OCI-conform containerisation tool installed (e.g. Podman).
   - For installing docker, see [link](https://docs.docker.com/engine/install/).
   - For installing podman, see [link](https://podman.io/docs/installation)
-- Even if you install a docker alternative as a container tool, you need to install the docker CLI in order to use the stepzen local dev environment. See [Setup using podman](#setup-using-podman) for more information.
-- An IDE with GraphQL support. We recommend [VS Code](https://code.visualstudio.com/) with the GraphQL Extension(https://marketplace.visualstudio.com/items?itemName=GraphQL.vscode-graphql)
+- Even if you install a docker alternative as a container tool, 
+  you need to install the docker CLI in order to use the stepzen local dev 
+  environment. 
+  See [Setup using podman](#setup-a-local-dev-environment-using-podman) for more information.
+- An IDE with GraphQL support. We recommend 
+  [VS Code](https://code.visualstudio.com/) with the 
+  [GraphQL Extension](https://marketplace.visualstudio.com/items?itemName=GraphQL.vscode-graphql)
 
 ## Install the StepZen CLI
 
@@ -30,11 +35,11 @@ yarn add global stepzen
 
 ```
 
-For more information click [here](https://stepzen.com/docs/cli).
+For more information click [here](https://www.ibm.com/docs/en/stepzen?topic=cli-reference).
 
 ## Setup a local dev environment using Docker
 
-For more information click [here](https://stepzen.com/docs/deployment/local-docker).
+For more information click [here](https://www.ibm.com/docs/en/stepzen?topic=apis-local-development-in-docker).
 
 ## Setup a local dev environment using Podman
 
@@ -55,3 +60,23 @@ Docker API clients default to this address. You do not need to set DOCKER_HOST.
 
 Podman generates a symbolic link to the socket `/var/run/docker.sock`, which is 
 by default in use from the docker cli.
+
+
+### Linux
+
+```bash
+ systemctl --user start podman.socket
+ export DOCKER_HOST=unix://$XDG_RUNTIME_DIR/podman/podman.sock 
+```
+
+### Run the service
+
+```bash
+stepzen service start  
+      Creating the stepzen-network network... done
+      Creating a stepzen-metadata Docker container... done
+      Creating a stepzen-local Docker container... done
+      Starting the stepzen-local, stepzen-metadata Docker containers... done
+
+stepzen login --config ~/.stepzen/stepzen-config.local.yaml
+```
