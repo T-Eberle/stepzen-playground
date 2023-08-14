@@ -1,0 +1,33 @@
+type Resource {
+  cpu_util: Float
+  created: DateTime
+  free_space_gb: Float
+  id: Int
+  mem_util: Float
+  name: String
+  provider: String
+  total_space_gb: Int
+  type: String
+  updated: DateTime
+}
+
+type Query {
+  "Returns all resources"
+  resourcesList: [Resource]
+    @graphql(
+      endpoint: "http://$url/graphql"
+      configuration: "resources-api-config"
+    )
+  "Get resource by id."
+  resourceById(id: Int): Resource
+    @graphql(
+      endpoint: "http://$url/graphql"
+      configuration: "resources-api-config"
+    )
+  "List resources matching IDs."
+  resourceFilterByIds(ids: [Int]): [Resource]
+    @graphql(
+      endpoint: "http://$url/graphql"
+      configuration: "resources-api-config"
+    )
+}

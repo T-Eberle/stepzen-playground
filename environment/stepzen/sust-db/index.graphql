@@ -1,0 +1,88 @@
+type sustainability {
+  resource_id: Int!
+  power_usage_kwh: Int!
+  particulate_matter_amount: Int!
+  name: String!
+  id: Int!
+  description: String
+  carbon_dioxide_t: Float!
+}
+
+extend type sustainability {
+  resources: Resource
+    @materializer(
+      query: "resourceById"
+      arguments: [{ name: "id", field: "resource_id" }]
+    )
+}
+
+"""
+The following queries are just a set of examples of how to access your schema.
+Feel free to modify them or aggregate more.
+"""
+type Query {
+  " Queries for type 'sustainability' "
+  sustainabilityById(id: Int!): [sustainability]
+    @dbquery(
+      type: "mysql"
+      table: "sustainability"
+      configuration: "sust-db-config"
+    )
+  sustainabilityByIdAndName(id: Int!, name: String!): [sustainability]
+    @dbquery(
+      type: "mysql"
+      table: "sustainability"
+      configuration: "sust-db-config"
+    )
+  sustainabilityList: [sustainability]
+    @dbquery(
+      type: "mysql"
+      table: "sustainability"
+      configuration: "sust-db-config"
+    )
+  sustainabilityPaginatedList(first: Int!, after: Int!): [sustainability]
+    @dbquery(
+      type: "mysql"
+      query: """
+      SELECT `carbon_dioxide_t`, `description`, `id`, `name`, `particulate_matter_amount`, `power_usage_kwh`, `resource_id` FROM `sustainability` LIMIT ? OFFSET ?
+      """
+      configuration: "sust-db-config"
+    )
+}
+
+"""
+The following mutations are just a set of examples of how to access your schema.
+Feel free to modify them or aggregate more.
+"""
+type Mutation {
+  " Mutations for type 'sustainability' "
+  deleteSustainability(
+    name: String!
+    description: String!
+    carbon_dioxide_t: Float!
+    power_usage_kwh: Int!
+    id: Int!
+    particulate_matter_amount: Int!
+    resource_id: Int!
+  ): sustainability
+    @dbquery(
+      type: "mysql"
+      table: "sustainability"
+      dml: DELETE
+      configuration: "sust-db-config"
+    )
+  insertSustainability(
+    name: String!
+    description: String!
+    carbon_dioxide_t: Float!
+    power_usage_kwh: Int!
+    particulate_matter_amount: Int!
+    resource_id: Int!
+  ): sustainability
+    @dbquery(
+      type: "mysql"
+      table: "sustainability"
+      dml: INSERT
+      configuration: "sust-db-config"
+    )
+}

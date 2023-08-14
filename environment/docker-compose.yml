@@ -1,0 +1,47 @@
+version: '3.7'
+services:
+  sust-db:
+    image: mariadb:11.0.2-jammy
+    restart: always
+    environment:
+      MYSQL_DATABASE: 'db'
+      # So you don't have to use root, but you can if you like
+      MYSQL_USER: 'user'
+      # You can use whatever password you like
+      MYSQL_PASSWORD: 'password'
+      # Password for root access
+      MYSQL_ROOT_PASSWORD: 'password'
+    ports:
+      # <Port exposed> : <MySQL Port running inside container>
+      - '3306:3306'
+    volumes:
+      - sust-db:/var/lib/mysql
+      - ./sust-db/create-tables.sql:/docker-entrypoint-initdb.d/create-tables.sql
+  cost-db:
+    image: postgres:15.3-alpine3.18
+    restart: always
+    environment:
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=cost
+    logging:
+      options:
+        max-size: 10m
+        max-file: "3"
+    ports:
+      - '15432:5432'
+    volumes: 
+      # copy the sql script to create tables
+      - ./cost-db/create_tables.sql:/docker-entrypoint-initdb.d/create_tables.sql
+  agile-api:
+    build: ./agile-api
+    ports:
+      - 18080:8080
+  resources-api:
+    build: ./resources-api
+    ports:
+      - 19000:9000
+# Names our volume
+volumes:
+  sust-db:
+  cost-db:
