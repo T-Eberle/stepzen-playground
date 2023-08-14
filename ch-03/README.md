@@ -104,14 +104,14 @@ Import the PostgreSQL database `cost-db` via `stepzen import`
 
 **Password:** *password*
 
-**Database:** *db*
+**Database:** *cost*
 
 <details>
 <summary><b>Results</b></summary>
 To import the `cost-db` via `stepzen import`, execute the following command:
 
 ```bash
-stepzen import postgresql postgresql://host.containers.internal:15432/db?user=user&password=password
+stepzen import postgresql postgresql://host.containers.internal:15432/cost?user=user&password=password
 ```
 
 </details>
