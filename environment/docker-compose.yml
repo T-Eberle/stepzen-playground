@@ -37,8 +37,6 @@ services:
     build: ./agile-api
     ports:
       - 18080:8080
-    networks: 
-      - stepzen-network
   resources-api:
     build: ./resources-api
     ports:
@@ -47,7 +45,3 @@ services:
 volumes:
   sust-db:
   cost-db:
-networks:
-  stepzen-network:
-    external:
-      true

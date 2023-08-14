@@ -70,7 +70,7 @@ following command in your desired target directory for this project:
 stepzen init
 ```
 
-For more information, click [here](https://stepzen.com/docs/cli/cli-commands#stepzen-init).
+For more information, click [here](https://www.ibm.com/docs/en/stepzen?topic=reference-cli-commands#stepzen-init).
 </details>
 
 

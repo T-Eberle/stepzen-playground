@@ -47,7 +47,7 @@ This means that a frontend developer can use the interface queries to request
 data from different types and queries, which implement this interface.
 
 For more information on the usage of interfaces to access multiple backends,
- click [here](https://stepzen.com/docs/connecting-backends/schemas-with-interfaces).
+ click [here](https://www.ibm.com/docs/en/stepzen?topic=schemas-use-interfaces-access-multiple-backends).
 
 ## Exercises
 

@@ -17,9 +17,9 @@ extend type project {
 }
 
 type Query {
-  projectsList: project
+  projectsList: [project]
     @rest(
-      endpoint: "http://$url/api/projects"
+      endpoint: "http://$url/api/projects/"
       configuration: "agile-api-config"
       transforms: [
         {
