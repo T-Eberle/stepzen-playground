@@ -1,4 +1,4 @@
-type cost {
+type Cost implements Capability{
   type: String!
   resource_id: Int!
   name: String!
@@ -7,13 +7,6 @@ type cost {
   amount: String!
 }
 
-extend type cost {
-  resource: Resource
-    @materializer(
-      query: "resourceById"
-      arguments: [{ name: "id", field: "resource_id" }]
-    )
-}
 
 """
 The following queries are just a set of examples of how to access your schema.
@@ -21,36 +14,44 @@ Feel free to modify them or aggregate more.
 """
 type Query {
   " Queries for type 'cost' "
-  costByIs_paid(is_paid: Boolean!): [cost]
+  costByIs_paid(is_paid: Boolean!): [Cost]
     @dbquery(
       type: "postgresql"
       schema: "public"
       table: "cost"
-      configuration: "cost-db-config"
+      configuration: "cost-db_config"
     )
-  costByIs_paidAndName(is_paid: Boolean!, name: String!): [cost]
+  costByIs_paidAndName(is_paid: Boolean!, name: String!): [Cost]
     @dbquery(
       type: "postgresql"
       schema: "public"
       table: "cost"
-      configuration: "cost-db-config"
+      configuration: "cost-db_config"
     )
-  costList: [cost]
+  costList: [Cost]
     @dbquery(
       type: "postgresql"
       schema: "public"
       table: "cost"
-      configuration: "cost-db-config"
+      configuration: "cost-db_config"
     )
-  costPaginatedList(first: Int, after: Int): [cost]
+  costPaginatedList(first: Int, after: Int): [Cost]
     @dbquery(
       type: "postgresql"
       schema: "public"
       query: """
       SELECT "amount", "description", "is_paid", "name", "resource_id", "type" FROM "cost" LIMIT $1 OFFSET $2
       """
-      configuration: "cost-db-config"
+      configuration: "cost-db_config"
     )
+  costByResource_id(resource_id: Int!): [Cost]
+  @supplies(query: "listCapabilities")
+  @dbquery(
+    type: "postgresql"
+    schema: "public"
+    table: "cost"
+    configuration: "cost-db_config"
+  )
 }
 
 """
@@ -66,13 +67,13 @@ type Mutation {
     is_paid: Boolean!
     type: String!
     resource_id: Int!
-  ): cost
+  ): Cost
     @dbquery(
       type: "postgresql"
       schema: "public"
       table: "cost"
       dml: DELETE
-      configuration: "cost-db-config"
+      configuration: "cost-db_config"
     )
   insertCost(
     name: String!
@@ -81,12 +82,12 @@ type Mutation {
     is_paid: Boolean
     type: String!
     resource_id: Int!
-  ): cost
+  ): Cost
     @dbquery(
       type: "postgresql"
       schema: "public"
       table: "cost"
       dml: INSERT
-      configuration: "cost-db-config"
+      configuration: "cost-db_config"
     )
 }

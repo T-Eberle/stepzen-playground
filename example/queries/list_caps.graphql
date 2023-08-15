@@ -1,0 +1,53 @@
+fragment BasicResource on Resource{
+  name
+  provider
+  created
+  updated
+}
+
+fragment CostV1 on Cost {
+  amount
+  type
+  is_paid
+  resource{
+  ...BasicResource
+  }
+}
+
+fragment SustainabilityV1 on Sustainability{
+  carbon_dioxide_t
+  particulate_matter_amount
+  resource{
+  ...BasicResource
+  }
+}
+
+fragment ProjectV1 on Project{
+  agile_method
+  resource_ids
+  team_members_amount
+  is_completed
+  resource{
+  ...BasicResource
+  }
+}
+
+
+fragment CapabilityV1 on Capability{
+    name
+    description
+    __typename
+}
+
+
+query ListCaps($resource_id: Int!){
+  
+  
+  listCapabilities(resource_id: $resource_id){
+    ...CapabilityV1
+    ...CostV1
+    ...SustainabilityV1
+    ...ProjectV1
+  }
+  
+}

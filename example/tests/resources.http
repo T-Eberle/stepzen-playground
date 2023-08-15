@@ -1,0 +1,12 @@
+POST http://127.0.0.1:9000/api/bootcamp/__graphql
+Content-Type: application/json
+Authorization: Apikey #YOUR_API_KEY
+X-REQUEST-TYPE: GraphQL
+
+query resources { 
+  resourcesList 
+  { 
+    name
+  }
+}
+
