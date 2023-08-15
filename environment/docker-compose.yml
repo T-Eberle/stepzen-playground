@@ -1,7 +1,7 @@
 version: '3.7'
 services:
   sust-db:
-    image: mariadb:11.0.2-jammy
+    image: mariadb:10.10-jammy
     restart: always
     environment:
       MYSQL_DATABASE: 'db'
@@ -15,7 +15,6 @@ services:
       # <Port exposed> : <MySQL Port running inside container>
       - '3306:3306'
     volumes:
-      - sust-db:/var/lib/mysql
       - ./sust-db/create-tables.sql:/docker-entrypoint-initdb.d/create-tables.sql
   cost-db:
     image: postgres:15.3-alpine3.18

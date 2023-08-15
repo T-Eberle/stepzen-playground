@@ -89,7 +89,7 @@ Information about the database:
 To import the `sust-db`, execute the following command:
 
 ```bash
-stepzen import mysql mysql://user.password@host.containers.internal:3306/db --name=sust-db
+stepzen import mysql mysql://user:password@host.containers.internal:3306/db --name=sust-db
 ```
 
 </details>
@@ -104,7 +104,7 @@ Import the PostgreSQL database `cost-db` via `stepzen import`
 
 **Password:** *password*
 
-**Database:** *db*
+**Database:** *cost*
 
 <details>
 <summary><b>Results</b></summary>
