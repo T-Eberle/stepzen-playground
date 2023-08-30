@@ -1,10 +1,12 @@
-# StepZen Bootcamp
+# StepZen & GraphQL Bootcamp
 
 - [Chapter 1: Setup and Installation](ch-01/README.md)
 - [Chapter 2: Create and Prepare](ch-02/README.md)
 - [Chapter 3: Generate and Connect](ch-03/README.md)
 - [Chapter 4: Combine and mutuate](ch-04/README.md)
 - [Chapter 5: Extend](ch-05/README.md)
+- [Chapter 6: Queries and Fragments](ch-06/README.md)
+- [Chapter 7: Mocking and Testing](ch-07/README.md)
 
 
 
@@ -39,6 +41,9 @@ to connect to the local services inside stepzen:
 - Podman: `host.containers.internal`
 - Alternatively: Your machine's IP address 
 
+## Example
+
+You can find a full example in the `example/` directory.
 
 ## Contact us
 

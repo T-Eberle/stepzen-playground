@@ -1,0 +1,38 @@
+#stepzen import curl http://host.containers.internal:18080/api/projects --name=agile-api --query-type=Project 
+type Project implements Capability{
+  agile_method: String
+  description: String
+  id: Int
+  is_completed: Boolean
+  name: String
+  resource_ids: [Int]
+  team_members_amount: Int
+}
+
+type Query {
+  projects: [Project]
+    @rest(
+      endpoint: "http://host.containers.internal:18080/api/projects"
+      transforms: [
+        {
+          pathpattern: []
+          editor: """
+          jq: .projects[]
+          """
+        }
+        ]
+      )
+  projectsByResource_id(resource_id: Int!): [Project]
+    @supplies(query: "listCapabilities")
+    @rest(
+      endpoint: "http://host.containers.internal:18080/api/projects_by_resource_id/$resource_id"
+      transforms: [
+        {
+          pathpattern: []
+          editor: """
+          jq: .projects[]
+          """
+        }
+        ]
+      )
+}

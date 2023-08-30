@@ -1,0 +1,8 @@
+extend type Cost {
+  resource: Resource
+  @materializer(
+      query: "resourceById"
+      arguments: [{ name: "id", field: "resource_id" }]
+  )
+
+}

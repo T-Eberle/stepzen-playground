@@ -1,0 +1,14 @@
+type WorkloadOptimization implements Capability @mock{
+    id: Int @mockfn(name: "List" values: [2])
+    json_test: JSON @mockfn(name: "List", values: ["{'foo': 0, 'bar': false}"])
+    name: String @mockfn(name: "List" values: ["ebs-volumes-optimization"])
+    description: String @mockfn(name: "List" values: ["EBS Volumes not optimized"])
+    cpu_usage: Float @mockfn(name: "NumberRange" values: [0,100])
+    resource_id: Int @mockfn(name: "List" values: [2])
+}
+
+type Query{
+    listworkloads: [WorkloadOptimization]
+    listworkloadsByResourceId(resource_id: Int!): [WorkloadOptimization]
+    #@supplies(query: "listCapabilities")     
+}

@@ -1,0 +1,7 @@
+configurationset:
+  - configuration:
+      name: sust-db_config
+      dsn: user:password@tcp(host.containers.internal:3306)/db
+  - configuration:
+      name: cost-db_config
+      uri: postgresql://host.containers.internal:15432/cost?user=user&password=password

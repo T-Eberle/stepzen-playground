@@ -1,0 +1,8 @@
+interface Capability{
+    name: String
+    description: String
+}
+
+type Query {
+    listCapabilities(resource_id: Int!): [Capability]
+}

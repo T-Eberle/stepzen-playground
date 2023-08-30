@@ -1,0 +1,17 @@
+schema
+  @sdl(
+    files: [
+      "cost-db/index.graphql"
+      "cost-db/extend.graphql"
+      "sust-db/index.graphql"
+      "sust-db/extend.graphql"
+      "resources/index.graphql"
+      "agile-api/index.graphql"
+      "agile-api/extend.graphql"
+      "capabilities/index.graphql"
+      
+      "workload-opt/index.graphql"
+    ]
+  ) {
+  query: Query
+}
