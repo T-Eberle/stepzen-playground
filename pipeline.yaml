@@ -1,3 +1,69 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: kaniko
+  labels:
+    app.kubernetes.io/version: "0.6"
+  annotations:
+    tekton.dev/pipelines.minVersion: "0.17.0"
+    tekton.dev/categories: Image Build
+    tekton.dev/tags: image-build
+    tekton.dev/displayName: "Build and upload container image using Kaniko"
+    tekton.dev/platforms: "linux/amd64,linux/arm64,linux/ppc64le"
+spec:
+  description: >-
+    This Task builds a simple Dockerfile with kaniko and pushes to a registry.
+    This Task stores the image name and digest as results, allowing Tekton Chains to pick up
+    that an image was built & sign it.
+  params:
+    - name: IMAGE
+      description: Name (reference) of the image to build.
+    - name: DOCKERFILE
+      description: Path to the Dockerfile to build.
+      default: ./Dockerfile
+    - name: CONTEXT
+      description: The build context used by Kaniko.
+      default: ./
+    - name: EXTRA_ARGS
+      type: array
+      default: []
+    - name: BUILDER_IMAGE
+      description: The image on which builds will run (default is v1.5.1)
+      default: gcr.io/kaniko-project/executor
+  workspaces:
+    - name: source
+      description: Holds the context and Dockerfile
+    - name: dockerconfig
+      description: Includes a docker `config.json`
+      optional: true
+      mountPath: /kaniko/.docker
+  results:
+    - name: IMAGE_DIGEST
+      description: Digest of the image just built.
+    - name: IMAGE_URL
+      description: URL of the image just built.
+  steps:
+    - name: build-and-push
+      workingDir: $(workspaces.source.path)
+      image: $(params.BUILDER_IMAGE)
+      args:
+        - $(params.EXTRA_ARGS)
+        - --dockerfile=$(params.DOCKERFILE)
+        - --context=$(workspaces.source.path)/$(params.CONTEXT) # The user does not need to care the workspace and the source.
+        - --destination=$(params.IMAGE)
+        - --digest-file=$(results.IMAGE_DIGEST.path)
+      # kaniko assumes it is running as root, which means this example fails on platforms
+      # that default to run containers as random uid (like OpenShift). Adding this securityContext
+      # makes it explicit that it needs to run as root.
+      securityContext:
+        runAsUser: 0
+    - name: write-url
+      image: docker.io/library/bash:5.1.4@sha256:c523c636b722339f41b6a431b44588ab2f762c5de5ec3bd7964420ff982fb1d9
+      script: |
+        set -e
+        image="$(params.IMAGE)"
+        echo -n "${image}" | tee "$(results.IMAGE_URL.path)"
+---
 apiVersion: tekton.dev/v1
 kind: Task
 metadata:
@@ -274,39 +340,12 @@ spec:
             image: quay.io/openshift/origin-cli:4.12
             script: |
               #!/bin/bash
-              oc apply -f - <<EOF
-              ---
-              apiVersion: v1
-              kind: ServiceAccount
-              metadata:
-                name: tekton-builder
-                namespace: default
-              ---
-              apiVersion: rbac.authorization.k8s.io/v1
-              kind: RoleBinding
-              metadata:
-                name: tekton-builder-rolebinding
-                namespace: default
-              roleRef:
-                name: system:image-builder
-                kind: ClusterRole
-              subjects:
-              - kind: ServiceAccount
-                name: tekton-builder
-                namespace: default
-              ---
-              apiVersion: rbac.authorization.k8s.io/v1
-              kind: RoleBinding
-              metadata:
-                name: tekton-builder-push-rolebinding
-                namespace: default
-              roleRef:
-                name: system:image-pusher
-                kind: ClusterRole
-              subjects:
-              - kind: ServiceAccount
-                name: tekton-builder
-                namespace: default
+              oc set env \
+              deployment/image-registry \
+              REGISTRY_MIDDLEWARE_REPOSITORY_OPENSHIFT_ACCEPTSCHEMA2=true \
+              -n openshift-image-registry
+              oc create sa stepzen-builder
+              oc policy add-role-to-user registry-editor -z stepzen-builder
     - name: git-clone
       runAfter:
         - create-sa
@@ -350,8 +389,7 @@ spec:
       runAfter:
         - git-clone
       taskRef:
-        name: buildah
-        kind: ClusterTask
+        name: kaniko
       params:
         - name: DOCKERFILE
           value: ./environment/agile-api/Dockerfile
@@ -359,8 +397,10 @@ spec:
           value: ./environment/agile-api
         - name: IMAGE
           value: image-registry.openshift-image-registry:5000/$(context.pipelineRun.namespace)/agile-api:latest
-        - name: TLSVERIFY
-          value: false
+        - name: EXTRA_ARGS
+          value:
+            - "--insecure"
+            - "--skip-tls-verify"
       workspaces:
         - name: source
           workspace: output

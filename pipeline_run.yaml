@@ -18,7 +18,7 @@ spec:
               storage: 1Gi
   taskRunSpecs:
     - pipelineTaskName: build-agile-api
-      taskServiceAccountName: tekton-builder
+      taskServiceAccountName: stepzen-builder
   params:
     - name: deleteExisting
       value: "true"
