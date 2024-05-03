@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cost-db
+  labels:
+    app: cost-db
+    env: stepzen-playground
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cost-db
+      env: stepzen-playground
+  template:
+    metadata:
+      labels:
+        app: cost-db
+        env: stepzen-playground
+    spec:
+      containers:
+        - name: database
+          image: postgres:15.3-alpine3.18
+          ports:
+          - containerPort: 5432
+          env:
+            - name: POSTGRES_DB
+              value: cost
+            - name: POSTGRES_PASSWORD
+              value: password
+            - name: POSTGRES_USER
+              value: user
+          volumeMounts:
+            - mountPath: /docker-entrypoint-initdb.d
+              name: create-tables
+      volumes:
+        - name: create-tables
+          configMap:
+            name: cost-db-config
+            items:
+            - key: create_tables.sql
+              path: create_tables.sql

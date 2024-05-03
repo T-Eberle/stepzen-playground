@@ -1,69 +1,3 @@
-apiVersion: tekton.dev/v1beta1
-kind: Task
-metadata:
-  name: kaniko
-  labels:
-    app.kubernetes.io/version: "0.6"
-  annotations:
-    tekton.dev/pipelines.minVersion: "0.17.0"
-    tekton.dev/categories: Image Build
-    tekton.dev/tags: image-build
-    tekton.dev/displayName: "Build and upload container image using Kaniko"
-    tekton.dev/platforms: "linux/amd64,linux/arm64,linux/ppc64le"
-spec:
-  description: >-
-    This Task builds a simple Dockerfile with kaniko and pushes to a registry.
-    This Task stores the image name and digest as results, allowing Tekton Chains to pick up
-    that an image was built & sign it.
-  params:
-    - name: IMAGE
-      description: Name (reference) of the image to build.
-    - name: DOCKERFILE
-      description: Path to the Dockerfile to build.
-      default: ./Dockerfile
-    - name: CONTEXT
-      description: The build context used by Kaniko.
-      default: ./
-    - name: EXTRA_ARGS
-      type: array
-      default: []
-    - name: BUILDER_IMAGE
-      description: The image on which builds will run (default is v1.5.1)
-      default: gcr.io/kaniko-project/executor
-  workspaces:
-    - name: source
-      description: Holds the context and Dockerfile
-    - name: dockerconfig
-      description: Includes a docker `config.json`
-      optional: true
-      mountPath: /kaniko/.docker
-  results:
-    - name: IMAGE_DIGEST
-      description: Digest of the image just built.
-    - name: IMAGE_URL
-      description: URL of the image just built.
-  steps:
-    - name: build-and-push
-      workingDir: $(workspaces.source.path)
-      image: $(params.BUILDER_IMAGE)
-      args:
-        - $(params.EXTRA_ARGS)
-        - --dockerfile=$(params.DOCKERFILE)
-        - --context=$(workspaces.source.path)/$(params.CONTEXT) # The user does not need to care the workspace and the source.
-        - --destination=$(params.IMAGE)
-        - --digest-file=$(results.IMAGE_DIGEST.path)
-      # kaniko assumes it is running as root, which means this example fails on platforms
-      # that default to run containers as random uid (like OpenShift). Adding this securityContext
-      # makes it explicit that it needs to run as root.
-      securityContext:
-        runAsUser: 0
-    - name: write-url
-      image: docker.io/library/bash:5.1.4@sha256:c523c636b722339f41b6a431b44588ab2f762c5de5ec3bd7964420ff982fb1d9
-      script: |
-        set -e
-        image="$(params.IMAGE)"
-        echo -n "${image}" | tee "$(results.IMAGE_URL.path)"
----
 apiVersion: tekton.dev/v1
 kind: Task
 metadata:
@@ -330,6 +264,9 @@ spec:
       type: string
     - name: verbose
       type: string
+    - name: imageRegistry
+      type: string
+      default: "image-registry.openshift-image-registry.svc.cluster.local:5000"
   workspaces:
     - name: output
   tasks:
@@ -389,52 +326,15 @@ spec:
       runAfter:
         - git-clone
       taskRef:
-        name: kaniko
+        name: buildah
+        kind: ClusterTask
       params:
         - name: DOCKERFILE
           value: ./environment/agile-api/Dockerfile
         - name: CONTEXT
           value: ./environment/agile-api
         - name: IMAGE
-          value: image-registry.openshift-image-registry:5000/$(context.pipelineRun.namespace)/agile-api:latest
-        - name: EXTRA_ARGS
-          value:
-            - "--insecure"
-            - "--skip-tls-verify"
-      workspaces:
-        - name: source
-          workspace: output
-    - name: build-cost-db
-      taskRef:
-        name: buildah
-        kind: ClusterTask
-      runAfter:
-        - build-agile-api
-      params:
-        - name: DOCKERFILE
-          value: ./environment/cost-db/Dockerfile
-        - name: CONTEXT
-          value: ./environment/cost-db
-        - name: IMAGE
-          value: image-registry.openshift-image-registry:5000/$(context.pipelineRun.namespace)/cost-db:latest
-        - name: TLSVERIFY
-          value: false
-      workspaces:
-        - name: source
-          workspace: output
-    - name: build-sust-db
-      runAfter:
-        - build-cost-db
-      taskRef:
-        name: buildah
-        kind: ClusterTask
-      params:
-        - name: DOCKERFILE
-          value: ./environment/sust-db/Dockerfile
-        - name: CONTEXT
-          value: ./environment/sust-db
-        - name: IMAGE
-          value: image-registry.openshift-image-registry:5000/$(context.pipelineRun.namespace)/sust-db:latest
+          value: $(params.imageRegistry)/$(context.pipelineRun.namespace)/agile-api:latest
         - name: TLSVERIFY
           value: false
       workspaces:
@@ -444,21 +344,18 @@ spec:
       taskRef:
         name: buildah
         kind: ClusterTask
+      retries: 5
       runAfter:
-        - build-sust-db
+        - build-agile-api
       params:
         - name: DOCKERFILE
           value: ./environment/resources-api/Dockerfile
         - name: CONTEXT
           value: ./environment/resources-api
         - name: IMAGE
-          value: image-registry.openshift-image-registry:5000/$(context.pipelineRun.namespace)/image-registry.openshift-image-registry:5000
+          value: $(params.imageRegistry)/$(context.pipelineRun.namespace)/resources-api:latest
         - name: TLSVERIFY
           value: false
       workspaces:
         - name: source
           workspace: output
-
-    # TODO graphql API
-    # TODO MYSQL Database
-    # TODO postgres database

@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sust-db
+  labels:
+    app: sust-db
+    env: stepzen-playground
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sust-db
+      env: stepzen-playground
+  template:
+    metadata:
+      labels:
+        app: sust-db
+        env: stepzen-playground
+    spec:
+      containers:
+        - name: api
+          image: mariadb:10.10-jammy
+          ports:
+          - containerPort: 3306
+          env:
+            - name: MYSQL_DATABASE
+              value: db
+            - name: MYSQL_USER
+              value: user
+            - name: MYSQL_PASSWORD
+              value: password
+            - name: MYSQL_ROOT_PASSWORD
+              value: password
+          volumeMounts:
+            - mountPath: /docker-entrypoint-initdb.d
+              name: create-tables
+      volumes:
+        - name: create-tables
+          configMap:
+            name: sust-db-config
+            items:
+            - key: create_tables.sql
+              path: create_tables.sql
