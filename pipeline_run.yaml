@@ -1,10 +1,10 @@
 apiVersion: tekton.dev/v1beta1
 kind: PipelineRun
 metadata:
-  name: stepzen-playground
+  generateName: stepzen-playground-
   namespace: default
 spec:
-  timeout: 1h0m0s
+  timeout: 8h0m0s
   pipelineRef:
     name: stepzen-playground
   workspaces:

@@ -1,0 +1,7 @@
+resources:
+  - deployment.yaml
+  - service.yaml
+configMapGenerator:
+  - name: cost-db-config
+    files:
+      - create_tables.sql=create_tables.sql
