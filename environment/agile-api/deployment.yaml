@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: agile-api
+  labels:
+    app: agile-api
+    env: stepzen-playground
+  annotations:
+    image.openshift.io/triggers: '[{"from":{"kind":"ImageStreamTag","name":"agile-api:latest"},"fieldPath":"spec.template.spec.containers[?(@.name==\"api\")].image"}]'
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: agile-api
+      env: stepzen-playground
+  template:
+    metadata:
+      labels:
+        app: agile-api
+        env: stepzen-playground
+    spec:
+      containers:
+        - name: api
+          image: agile-api:latest
+
+          ports:
+          - containerPort: 8080

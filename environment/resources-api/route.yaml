@@ -1,0 +1,10 @@
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: resources-api
+spec:
+  port:
+    targetPort: 9000
+  to:
+    kind: Service
+    name: resources-api

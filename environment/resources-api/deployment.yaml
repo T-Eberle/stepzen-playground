@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: resources-api
+  labels:
+    app: resources-api
+    env: stepzen-playground
+  annotations:
+    image.openshift.io/triggers: '[{"from":{"kind":"ImageStreamTag","name":"resources-api:latest"},"fieldPath":"spec.template.spec.containers[?(@.name==\"api\")].image"}]'
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: resources-api
+      env: stepzen-playground
+  template:
+    metadata:
+      labels:
+        app: resources-api
+        env: stepzen-playground
+    spec:
+      containers:
+        - name: api
+          image: resources-api:latest
+          imagePullPolicy: Always
+          ports:
+          - containerPort: 9000

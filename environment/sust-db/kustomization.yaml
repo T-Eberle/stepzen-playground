@@ -1,0 +1,7 @@
+resources:
+  - deployment.yaml
+  - service.yaml
+configMapGenerator:
+  - name: sust-db-config
+    files:
+      - create_tables.sql=create-tables.sql
