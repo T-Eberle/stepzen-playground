@@ -271,11 +271,11 @@ spec:
     - name: output
   tasks:
     - name: create-sa
-      taskSpec:
-        steps:
-          - name: create-sa
-            image: quay.io/openshift/origin-cli:4.12
-            script: |
+      taskRef:
+        name: ibm-pak
+      params:
+        - name: SCRIPT
+          value: |
               #!/bin/bash
               oc set env \
               deployment/image-registry \
@@ -358,4 +358,17 @@ spec:
           value: false
       workspaces:
         - name: source
+          workspace: output
+    - name: kustomize
+      runAfter:
+        - build-resources-api
+      taskRef:
+        name: ibm-pak
+      params:
+        - name: SCRIPT
+          value: |
+            #!/bin/bash
+            oc apply -k ./environment/
+      workspaces:
+        - name: manifest-dir
           workspace: output
