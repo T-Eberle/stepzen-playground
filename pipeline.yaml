@@ -19,8 +19,6 @@ spec:
       optional: false
   tasks:
     - name: git-clone
-      runAfter:
-        - create-sa
       taskRef:
         name: git-clone-1-13-0
         kind: ClusterTask
