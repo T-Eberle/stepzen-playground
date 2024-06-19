@@ -20,7 +20,7 @@ spec:
   tasks:
     - name: git-clone
       taskRef:
-        name: git-clone-1-13-0
+        name: git-clone
         kind: ClusterTask
       params:
         - name: url
