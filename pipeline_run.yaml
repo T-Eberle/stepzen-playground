@@ -1,24 +1,32 @@
-apiVersion: tekton.dev/v1beta1
+apiVersion: tekton.dev/v1
 kind: PipelineRun
 metadata:
   generateName: stepzen-playground-
   namespace: default
 spec:
-  timeout: 8h0m0s
   pipelineRef:
     name: stepzen-playground
   workspaces:
     - name: output
       volumeClaimTemplate:
+        metadata:
+          creationTimestamp: null
         spec:
           accessModes:
             - ReadWriteOnce
           resources:
             requests:
               storage: 1Gi
-  taskRunSpecs:
-    - pipelineTaskName: build-agile-api
-      taskServiceAccountName: stepzen-builder
+          storageClassName: ocs-storagecluster-cephfs
+          volumeMode: Filesystem
+    - name: ssh-directory
+      secret:
+        secretName: ssh-ghe-private-key
+  taskRunTemplate:
+    serviceAccountName: pipeline
+    podTemplate:
+      securityContext:
+        fsGroup: 65532
   params:
     - name: deleteExisting
       value: "true"
